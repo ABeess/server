@@ -12,6 +12,10 @@ const main = async () => {
 
   app.use('/api', baseRouter)
 
+  app.use('/', (_req, res) => {
+    res.send('Hello World!')
+  })
+
   const PORT = process.env.PORT || 3080
 
   app.listen(PORT, () => {

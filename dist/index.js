@@ -13,6 +13,9 @@ const main = async () => {
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true }));
     app.use('/api', baseApi_1.default);
+    app.use('/', (_req, res) => {
+        res.send('Hello World!');
+    });
     const PORT = process.env.PORT || 3080;
     app.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}: http://localhost:${PORT}`);
