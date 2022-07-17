@@ -2,7 +2,7 @@ import express from 'express'
 
 const Router = express.Router()
 
-Router.get('/', (req, res) => {
+Router.get('/', (_req, res) => {
   res.send('Hello World!')
 })
 
