@@ -11,6 +11,9 @@ const myDataSource = new DataSource({
   entities: ['dist/entities/*.js'],
   synchronize: true,
   logging: true,
+  extra: {
+    ssl: true,
+  },
 })
 
 export default myDataSource

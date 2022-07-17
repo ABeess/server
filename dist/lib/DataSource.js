@@ -12,6 +12,9 @@ const myDataSource = new typeorm_1.DataSource({
     entities: ['dist/entities/*.js'],
     synchronize: true,
     logging: true,
+    extra: {
+        ssl: true,
+    },
 });
 exports.default = myDataSource;
 //# sourceMappingURL=DataSource.js.map
