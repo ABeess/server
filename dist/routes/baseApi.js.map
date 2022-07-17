@@ -1,0 +1,1 @@
+{"version":3,"file":"baseApi.js","sourceRoot":"","sources":["../../src/routes/baseApi.ts"],"names":[],"mappings":";;;;;AAAA,sDAA6B;AAC7B,8DAAqC;AACrC,8DAAqC;AAErC,MAAM,MAAM,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAA;AAE/B,MAAM,CAAC,GAAG,CAAC,OAAO,EAAE,oBAAU,CAAC,CAAA;AAC/B,MAAM,CAAC,GAAG,CAAC,QAAQ,EAAE,oBAAU,CAAC,CAAA;AAEhC,kBAAe,MAAM,CAAA"}
