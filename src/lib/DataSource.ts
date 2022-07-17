@@ -12,7 +12,9 @@ const myDataSource = new DataSource({
   synchronize: true,
   logging: true,
   extra: {
-    ssl: true,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   },
 })
 

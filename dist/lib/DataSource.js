@@ -13,7 +13,9 @@ const myDataSource = new typeorm_1.DataSource({
     synchronize: true,
     logging: true,
     extra: {
-        ssl: true,
+        ssl: {
+            rejectUnauthorized: false,
+        },
     },
 });
 exports.default = myDataSource;
