@@ -1,17 +1,17 @@
-// import MongoStore from 'connect-mongo'
+import MongoStore from 'connect-mongo'
 import 'dotenv/config'
 import express from 'express'
 import session from 'express-session'
-// import mongoose from 'mongoose'
-// import AppDataRource from './lib/DataSource'
+import mongoose from 'mongoose'
+import AppDataRource from './lib/DataSource'
 import baseRouter from './routes/baseApi'
 
 const main = async () => {
   const app = express()
 
-  // await AppDataRource.connect()
+  await AppDataRource.connect()
 
-  // await mongoose.connect(String(process.env.MONGO_URI)).then(() => console.log('MongoConected'))
+  await mongoose.connect(String(process.env.MONGO_URI)).then(() => console.log('MongoConected'))
 
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
@@ -23,9 +23,9 @@ const main = async () => {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
       },
-      // store: MongoStore.create({
-      //   mongoUrl: String(process.env.MONGO_URI),
-      // }),
+      store: MongoStore.create({
+        mongoUrl: String(process.env.MONGO_URI),
+      }),
       secret: String(process.env.SESSION_SECRET),
       resave: false,
       saveUninitialized: false,
