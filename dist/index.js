@@ -31,6 +31,9 @@ const main = async () => {
         saveUninitialized: false,
     }));
     app.use('/api', baseApi_1.default);
+    app.use('/', (_req, res) => {
+        res.send('Hello World!');
+    });
     const PORT = process.env.PORT || 3080;
     app.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}: http://localhost:${PORT}`);
