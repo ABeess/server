@@ -3,13 +3,13 @@ import 'dotenv/config'
 import express from 'express'
 import session from 'express-session'
 import mongoose from 'mongoose'
-import AppDataRource from './lib/DataSource'
+// import AppDataRource from './lib/DataSource'
 import baseRouter from './routes/baseApi'
 
 const main = async () => {
   const app = express()
 
-  await AppDataRource.connect()
+  // await AppDataRource.connect()
 
   await mongoose.connect(String(process.env.MONGO_URI)).then(() => console.log('MongoConected'))
 
