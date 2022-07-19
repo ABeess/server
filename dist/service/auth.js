@@ -5,11 +5,11 @@ class AuthService {
     constructor(authRepository) {
         this.authRepository = authRepository;
     }
-    async register(registerInput) {
+    async registerRepository(registerInput) {
         const { email, password } = registerInput;
         const user = this.authRepository.create({ email, password });
         return this.authRepository.save(user);
     }
 }
 exports.default = new AuthService(repository_1.userRepository);
-//# sourceMappingURL=authService.js.map
+//# sourceMappingURL=auth.js.map

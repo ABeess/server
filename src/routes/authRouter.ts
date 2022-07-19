@@ -1,19 +1,14 @@
 import express, { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
+import AuthControllers from '../controllers/authControllers'
 import { UnauthorizedError } from '../lib/Errors'
-import { AuthService } from '../service/authService'
-import { JWTManager } from '../utils/jwt'
-// import userRepository, { User } from '../entities/User'
+import JWTManager from '../utils/jwt'
 
 const Router = express.Router()
 
-const { register, login, authRefreshToken } = new AuthService()
-
-const { genarateAccessToken, genarateRefreshToken } = new JWTManager()
-
 Router.post('/register', async (req: Request, res: Response) => {
   try {
-    await register(req.body)
+    await AuthControllers.register(req.body)
     return res.status(StatusCodes.CREATED).json({
       code: StatusCodes.CREATED,
       message: 'User created',
@@ -29,7 +24,7 @@ Router.post('/register', async (req: Request, res: Response) => {
 
 Router.post('/login', async (req: Request, res: Response) => {
   try {
-    const user = await login(req.body)
+    const user = await AuthControllers.login(req.body)
 
     if (!user) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -37,8 +32,8 @@ Router.post('/login', async (req: Request, res: Response) => {
         message: 'Email or password is incorrect',
       })
     }
-    const accessToken = genarateAccessToken(user)
-    const refreshToken = genarateRefreshToken(user)
+    const accessToken = JWTManager.genarateAccessToken(user)
+    const refreshToken = JWTManager.genarateRefreshToken(user)
 
     req.session.userId = user.id || ''
     req.session.refreshToken = refreshToken
@@ -92,7 +87,7 @@ Router.post('/refresh-token', async (req: Request, res: Response) => {
       })
     }
 
-    const { newAccessToken, newRefreshToken } = await authRefreshToken(refreshToken)
+    const { newAccessToken, newRefreshToken } = await AuthControllers.refreshToken(refreshToken)
 
     req.session.refreshToken = newRefreshToken
 

@@ -1,17 +1,19 @@
-import MongoStore from 'connect-mongo'
 import 'dotenv/config'
 import express from 'express'
 import session from 'express-session'
-import mongoose from 'mongoose'
 import AppDataRource from './lib/DataSource'
 import baseRouter from './routes/baseApi'
+import * as redis from 'redis'
+import connectRedis from 'connect-redis'
 
 const main = async () => {
   const app = express()
 
-  await AppDataRource.connect()
+  const RedisStore = connectRedis(session)
+  const redisClient = redis.createClient({ legacyMode: true })
 
-  await mongoose.connect(String(process.env.MONGO_URI)).then(() => console.log('MongoConected'))
+  await AppDataRource.connect()
+  await redisClient.connect()
 
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
@@ -23,9 +25,7 @@ const main = async () => {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
       },
-      store: MongoStore.create({
-        mongoUrl: String(process.env.MONGO_URI),
-      }),
+      store: new RedisStore({ client: redisClient }),
       secret: String(process.env.SESSION_SECRET),
       resave: false,
       saveUninitialized: false,

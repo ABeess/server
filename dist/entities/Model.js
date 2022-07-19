@@ -8,31 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
 const typeorm_1 = require("typeorm");
-const Model_1 = __importDefault(require("./Model"));
-const UserInfo_1 = __importDefault(require("./UserInfo"));
-let User = class User extends Model_1.default {
-};
+class Model extends typeorm_1.BaseEntity {
+}
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
-], User.prototype, "email", void 0);
+], Model.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Model.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => UserInfo_1.default, (userInfo) => userInfo.user),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", UserInfo_1.default)
-], User.prototype, "userInfo", void 0);
-User = __decorate([
-    (0, typeorm_1.Entity)()
-], User);
-exports.User = User;
-//# sourceMappingURL=User.js.map
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Model.prototype, "updatedAt", void 0);
+exports.default = Model;
+//# sourceMappingURL=Model.js.map

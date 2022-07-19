@@ -1,19 +1,16 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm'
+import Model from './Model'
+import UserInfo from './UserInfo'
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string
-
+export class User extends Model {
   @Column({ unique: true })
   email!: string
 
   @Column()
   password!: string
 
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
+  @OneToOne(() => UserInfo, (userInfo) => userInfo.user)
+  @JoinColumn()
+  userInfo: UserInfo
 }
