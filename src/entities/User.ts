@@ -1,16 +1,17 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm'
-import Model from './Model'
-import UserInfo from './UserInfo'
+import { Column, Entity, OneToOne } from 'typeorm';
+import Model from './Model';
+import UserInfo from './UserInfo';
 
 @Entity()
 export class User extends Model {
   @Column({ unique: true })
-  email!: string
+  email!: string;
 
-  @Column()
-  password!: string
+  @Column({ select: false })
+  password!: string;
 
-  @OneToOne(() => UserInfo, (userInfo) => userInfo.user)
-  @JoinColumn()
-  userInfo: UserInfo
+  @OneToOne(() => UserInfo, (userInfo) => userInfo.user, {
+    cascade: true,
+  })
+  userInfo?: UserInfo;
 }

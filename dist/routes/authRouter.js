@@ -16,13 +16,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_status_codes_1 = require("http-status-codes");
-const authControllers_1 = __importDefault(require("../controllers/authControllers"));
+const authService_1 = __importDefault(require("../service/authService"));
 const Errors_1 = require("../lib/Errors");
 const jwt_1 = __importDefault(require("../utils/jwt"));
 const Router = express_1.default.Router();
 Router.post('/register', async (req, res) => {
     try {
-        await authControllers_1.default.register(req.body);
+        await authService_1.default.register(req.body);
         return res.status(http_status_codes_1.StatusCodes.CREATED).json({
             code: http_status_codes_1.StatusCodes.CREATED,
             message: 'User created',
@@ -38,16 +38,16 @@ Router.post('/register', async (req, res) => {
 });
 Router.post('/login', async (req, res) => {
     try {
-        const user = await authControllers_1.default.login(req.body);
+        const user = await authService_1.default.login(req.body);
         if (!user) {
             return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
                 code: http_status_codes_1.StatusCodes.UNAUTHORIZED,
                 message: 'Email or password is incorrect',
             });
         }
-        const accessToken = jwt_1.default.genarateAccessToken(user);
-        const refreshToken = jwt_1.default.genarateRefreshToken(user);
-        req.session.userId = user.id || '';
+        const accessToken = jwt_1.default.generateAccessToken(user);
+        const refreshToken = jwt_1.default.generateRefreshToken(user);
+        req.session.userId = user.id || undefined;
         req.session.refreshToken = refreshToken;
         const { password } = user, other = __rest(user, ["password"]);
         return res.status(http_status_codes_1.StatusCodes.OK).json({
@@ -95,7 +95,7 @@ Router.post('/refresh-token', async (req, res) => {
                 message: 'You are not authenticated',
             });
         }
-        const { newAccessToken, newRefreshToken } = await authControllers_1.default.refreshToken(refreshToken);
+        const { newAccessToken, newRefreshToken } = await authService_1.default.refreshToken(refreshToken);
         req.session.refreshToken = newRefreshToken;
         return res.status(http_status_codes_1.StatusCodes.OK).json({
             code: http_status_codes_1.StatusCodes.OK,

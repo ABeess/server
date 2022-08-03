@@ -42,7 +42,10 @@ __decorate([
     __metadata("design:type", String)
 ], UserInfo.prototype, "avatar", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => User_1.User, (user) => user.userInfo),
+    (0, typeorm_1.OneToOne)(() => User_1.User, (user) => user.userInfo, {
+        onDelete: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", User_1.User)
 ], UserInfo.prototype, "user", void 0);
 UserInfo = __decorate([

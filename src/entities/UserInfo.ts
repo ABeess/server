@@ -1,27 +1,30 @@
-import { Column, Entity, OneToOne } from 'typeorm'
-import Model from './Model'
-import { User } from './User'
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import Model from './Model';
+import { User } from './User';
 
 @Entity()
 export default class UserInfo extends Model {
   @Column()
-  firstName!: string
+  firstName!: string;
 
   @Column()
-  lastName!: string
+  lastName!: string;
 
   @Column()
-  phoneNumber!: number
+  phoneNumber!: number;
 
   @Column()
-  gender: string
+  gender: string;
 
   @Column()
-  address: string
+  address: string;
 
   @Column()
-  avatar: string
+  avatar: string;
 
-  @OneToOne(() => User, (user) => user.userInfo)
-  user: User
+  @OneToOne(() => User, (user) => user.userInfo, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }

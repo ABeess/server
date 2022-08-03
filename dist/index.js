@@ -33,6 +33,9 @@ const DataSource_1 = __importDefault(require("./lib/DataSource"));
 const baseApi_1 = __importDefault(require("./routes/baseApi"));
 const redis = __importStar(require("redis"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
+const cors_1 = __importDefault(require("cors"));
+const http_1 = __importDefault(require("http"));
+const socket_1 = __importDefault(require("./socket"));
 const main = async () => {
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
@@ -41,6 +44,10 @@ const main = async () => {
     await redisClient.connect();
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true }));
+    app.use((0, cors_1.default)({
+        origin: 'http://localhost:3090',
+        credentials: true,
+    }));
     app.use((0, express_session_1.default)({
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7,
@@ -55,10 +62,12 @@ const main = async () => {
     }));
     app.use('/api', baseApi_1.default);
     app.use('/', (_req, res) => {
-        res.send('Hello World!');
+        res.sendFile(__dirname + '/index.html');
     });
+    const httpServer = http_1.default.createServer(app);
+    (0, socket_1.default)(httpServer);
     const PORT = process.env.PORT || 3080;
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}: http://localhost:${PORT}`);
     });
 };

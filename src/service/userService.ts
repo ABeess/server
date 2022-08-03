@@ -1,26 +1,40 @@
-import { Repository, UpdateResult } from 'typeorm'
-import { User } from '../entities/User'
-import { userRepository } from '../utils/repository'
+import UserInfo from '../entities/UserInfo';
+import { BadRequestError, NotFoundError } from '../lib/Errors';
+import UserInfoRepository from '../repository/userInfoRepository';
+import userRepository from '../repository/userRepository';
 
-class userService {
-  constructor(private userRepository: Repository<User>) {}
+class UserService {
+  async createAndUpdate(body: UserInfo, userId: number): Promise<UserInfo | null> {
+    if (!userId) {
+      throw new BadRequestError('Missing the parameter');
+    }
 
-  async findOne(params: string, query: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      relations: ['userInfo'],
-      where: { [params]: query },
-      select: {
-        id: true,
-        email: true,
-        password: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    })
-  }
-  async update(query: string, params: object): Promise<UpdateResult> {
-    return this.userRepository.update(query, params)
+    const existingUser = await userRepository.findOne(
+      { id: userId },
+      {
+        relations: ['userInfo'],
+      }
+    );
+
+    if (!existingUser) {
+      throw new NotFoundError('User dose not exist on the system');
+    }
+
+    const existingUserInfo = existingUser.userInfo;
+
+    if (existingUserInfo) {
+      const newUserInfo = await UserInfoRepository.update(existingUserInfo.id, body);
+      // console.log(newUserInfo);
+      return newUserInfo.raw[0];
+    }
+
+    const newUserInfo = await UserInfoRepository.insert({
+      ...body,
+      user: existingUser,
+    });
+    console.log(newUserInfo);
+    return newUserInfo.raw[0];
   }
 }
 
-export default new userService(userRepository)
+export default new UserService();

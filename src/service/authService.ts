@@ -1,15 +1,91 @@
-import { Repository } from 'typeorm'
-import { User } from '../entities/User'
-import { RegisterInput } from '../types/InputType'
-import { userRepository } from '../utils/repository'
+import argon2 from 'argon2';
+import JWT, { JwtPayload, Secret } from 'jsonwebtoken';
+import { User } from '../entities/User';
+import { ConflictError, UnauthorizedError } from '../lib/Errors';
+import UserRepository from '../repository/userRepository';
+import { LoginInput, RegisterInput } from '../types/InputType';
+import JWTManager from '../utils/jwt';
+import { ValidateLogin } from '../utils/validator';
+
+type ReturnToken = {
+  newAccessToken: string;
+  newRefreshToken: string;
+};
 
 class AuthService {
-  constructor(private authRepository: Repository<User>) {}
   async register(registerInput: RegisterInput): Promise<User | null> {
-    const { email, password } = registerInput
-    const user = this.authRepository.create({ email, password })
-    return this.authRepository.save(user)
+    const { email, password } = registerInput;
+    const validate: any = new ValidateLogin(email, password);
+
+    if (validate && validate.error) {
+      throw new UnauthorizedError(validate.error.message);
+    }
+
+    const existingUser = await UserRepository.findOne({ email });
+
+    if (existingUser) {
+      throw new ConflictError('Email already exists');
+    }
+
+    const hashedPassword = await argon2.hash(password);
+
+    const newUser = UserRepository.create({ email, password: hashedPassword });
+
+    return newUser;
+  }
+  // ----------------------------------------------------------------------------------
+  async login(loginInput: LoginInput): Promise<User | null> {
+    const { email, password } = loginInput;
+    // const validate: any = new ValidateLogin(email, password)
+
+    // if (validate && validate.error) {
+    //   throw new UnauthorizedError(validate.error.message)
+    // }
+
+    const existingUser = await UserRepository.findOne(
+      { email },
+      {
+        relations: ['userInfo'],
+      }
+    );
+
+    if (!existingUser) {
+      throw new UnauthorizedError('Email or password is incorrect');
+    }
+
+    const validPassword = await argon2.verify(existingUser.password, password);
+
+    if (!validPassword) {
+      throw new UnauthorizedError('Email or password is incorrect');
+    }
+    return existingUser;
+  }
+  // ----------------------------------------------------------------------------------
+  async refreshToken(token: string): Promise<ReturnToken> {
+    if (!token) {
+      throw new UnauthorizedError('No token provided');
+    }
+    const payload = JWT.verify(token, process.env.JWT_REFRESHTOKEN_SECRET as Secret) as JwtPayload;
+
+    if (!payload) {
+      throw new UnauthorizedError('Invalid token');
+    }
+
+    const existingUser = await UserRepository.findOne({ id: payload.id });
+
+    if (!existingUser) {
+      throw new UnauthorizedError('You are not authenticated');
+    }
+
+    const newAccessToken = JWTManager.generateAccessToken(existingUser);
+
+    const newRefreshToken = JWTManager.generateRefreshToken(existingUser);
+
+    return {
+      newAccessToken,
+      newRefreshToken,
+    };
   }
 }
 
-export default new AuthService(userRepository)
+export default new AuthService();

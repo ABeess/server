@@ -23,12 +23,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ select: false }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => UserInfo_1.default, (userInfo) => userInfo.user),
-    (0, typeorm_1.JoinColumn)(),
+    (0, typeorm_1.OneToOne)(() => UserInfo_1.default, (userInfo) => userInfo.user, {
+        cascade: true,
+    }),
     __metadata("design:type", UserInfo_1.default)
 ], User.prototype, "userInfo", void 0);
 User = __decorate([
