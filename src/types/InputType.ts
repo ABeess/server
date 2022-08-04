@@ -12,5 +12,5 @@ export interface LoginInput {
 }
 
 export interface UserInfoInput extends Partial<UserInfo> {
-  user: User;
+  user?: User;
 }

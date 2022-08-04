@@ -2,16 +2,20 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import userRepository from '../repository/userRepository';
 import userService from '../service/userService';
+import multer from 'multer';
+
+const upload = multer({ storage: multer.diskStorage({}) });
 
 const Router = express.Router();
 
-Router.post('/user', async (req, res) => {
+Router.post('/user', upload.single('file'), async (req, res) => {
   try {
     const body = req.body;
 
     const userId = req.session.userId as number;
+    const file = req.file;
 
-    const userInfo = await userService.createAndUpdate(body, userId);
+    const userInfo = await userService.createAndUpdate({ body, userId, file });
 
     return res.status(StatusCodes.OK).json({
       code: StatusCodes.OK,

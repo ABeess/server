@@ -7,12 +7,15 @@ const express_1 = __importDefault(require("express"));
 const http_status_codes_1 = require("http-status-codes");
 const userRepository_1 = __importDefault(require("../repository/userRepository"));
 const userService_1 = __importDefault(require("../service/userService"));
+const multer_1 = __importDefault(require("multer"));
+const upload = (0, multer_1.default)({ storage: multer_1.default.diskStorage({}) });
 const Router = express_1.default.Router();
-Router.post('/user', async (req, res) => {
+Router.post('/user', upload.single('file'), async (req, res) => {
     try {
         const body = req.body;
         const userId = req.session.userId;
-        const userInfo = await userService_1.default.createAndUpdate(body, userId);
+        const file = req.file;
+        const userInfo = await userService_1.default.createAndUpdate({ body, userId, file });
         return res.status(http_status_codes_1.StatusCodes.OK).json({
             code: http_status_codes_1.StatusCodes.OK,
             message: 'User info updated',

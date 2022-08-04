@@ -38,9 +38,13 @@ __decorate([
     __metadata("design:type", String)
 ], UserInfo.prototype, "address", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], UserInfo.prototype, "avatar", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], UserInfo.prototype, "public_id", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => User_1.User, (user) => user.userInfo, {
         onDelete: 'CASCADE',

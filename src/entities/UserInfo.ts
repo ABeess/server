@@ -19,8 +19,11 @@ export default class UserInfo extends Model {
   @Column()
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   avatar: string;
+
+  @Column({ nullable: true })
+  public_id: string;
 
   @OneToOne(() => User, (user) => user.userInfo, {
     onDelete: 'CASCADE',

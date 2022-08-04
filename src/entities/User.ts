@@ -7,7 +7,7 @@ export class User extends Model {
   @Column({ unique: true })
   email!: string;
 
-  @Column({ select: false })
+  @Column()
   password!: string;
 
   @OneToOne(() => UserInfo, (userInfo) => userInfo.user, {

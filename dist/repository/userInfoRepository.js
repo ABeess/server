@@ -10,9 +10,7 @@ class UserInfoRepository {
         this.repository = repository;
     }
     async create(data) {
-        return await this.repository.save(data, {
-            reload: true,
-        });
+        return await this.repository.save(data);
     }
     async insert(data) {
         return this.repository.createQueryBuilder().insert().values(data).returning('*').execute();
@@ -29,7 +27,7 @@ class UserInfoRepository {
     async update(id, user) {
         return await this.repository
             .createQueryBuilder()
-            .update(UserInfo_1.default)
+            .update()
             .set(user)
             .where('id = :id', { id })
             .returning('*')

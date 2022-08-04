@@ -8,9 +8,7 @@ class UserInfoRepository {
   constructor(private repository: Repository<UserInfo>) {}
 
   async create(data: UserInfoInput): Promise<UserInfo> {
-    return await this.repository.save(data, {
-      reload: true,
-    });
+    return await this.repository.save(data);
   }
 
   async insert(data: UserInfoInput) {
@@ -48,10 +46,10 @@ class UserInfoRepository {
     });
   }
 
-  async update(id: number, user: UserInfo): Promise<UpdateResult> {
+  async update(id: number, user: UserInfoInput): Promise<UpdateResult> {
     return await this.repository
       .createQueryBuilder()
-      .update(UserInfo)
+      .update()
       .set(user)
       .where('id = :id', { id })
       .returning('*')
