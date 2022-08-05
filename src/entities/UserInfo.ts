@@ -4,19 +4,19 @@ import { User } from './User';
 
 @Entity()
 export default class UserInfo extends Model {
-  @Column()
-  firstName!: string;
+  @Column({ nullable: true })
+  firstName: string;
 
-  @Column()
-  lastName!: string;
+  @Column({ nullable: true })
+  lastName: string;
 
-  @Column()
-  phoneNumber!: number;
+  @Column({ nullable: true })
+  phoneNumber: number;
 
-  @Column()
+  @Column({ nullable: true })
   gender: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
   @Column({ nullable: true })

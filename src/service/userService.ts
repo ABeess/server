@@ -4,12 +4,12 @@ import { BadRequestError, NotFoundError } from '../lib/Errors';
 import UserInfoRepository from '../repository/userInfoRepository';
 import userRepository from '../repository/userRepository';
 import { UserInfoInput } from '../types/InputType';
-import { uploadCloudinary } from '../utils/cloudinary';
+import { singleUpload } from '../utils/cloudinary';
 
 interface ParameterType {
   body: UserInfoInput;
   userId: number;
-  file?: any;
+  file?: Express.Multer.File;
 }
 
 class UserService {
@@ -29,7 +29,7 @@ class UserService {
       throw new NotFoundError('User dose not exist on the system');
     }
 
-    const upload: UploadApiResponse = file && (await uploadCloudinary(file, userId));
+    const upload = file && ((await singleUpload(file, userId)) as UploadApiResponse);
     const data = upload
       ? {
           ...body,

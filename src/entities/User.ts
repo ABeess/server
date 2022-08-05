@@ -5,7 +5,16 @@ import UserInfo from './UserInfo';
 @Entity()
 export class User extends Model {
   @Column({ unique: true })
-  email!: string;
+  email: string;
+
+  @Column({ nullable: true, unique: true })
+  googleId: string;
+
+  @Column({ nullable: true, unique: true })
+  githubId: string;
+
+  @Column({ nullable: true })
+  provider: string;
 
   @Column()
   password!: string;

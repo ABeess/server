@@ -3,20 +3,19 @@ import express from 'express';
 import session from 'express-session';
 import AppDataSource from './lib/DataSource';
 import baseRouter from './routes/baseApi';
-import * as redis from 'redis';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 import http from 'http';
 import socketIo from './socket';
+import redis from './utils/redis';
+import passport from './lib/passport';
 
 const main = async () => {
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient({ legacyMode: true });
 
   await AppDataSource.connect();
-  await redisClient.connect();
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -34,18 +33,17 @@ const main = async () => {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
       },
-      store: new RedisStore({ client: redisClient }),
+      store: new RedisStore({ client: redis }),
       secret: String(process.env.SESSION_SECRET),
       resave: false,
       saveUninitialized: false,
     })
   );
 
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use('/api', baseRouter);
-
-  app.use('/', (_req, res) => {
-    res.sendFile(__dirname + '/index.html');
-  });
+  // app.use('/', OAuthRouter);
 
   const httpServer = http.createServer(app);
 

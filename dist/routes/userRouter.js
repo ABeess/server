@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_status_codes_1 = require("http-status-codes");
+const multer_1 = __importDefault(require("multer"));
 const userRepository_1 = __importDefault(require("../repository/userRepository"));
 const userService_1 = __importDefault(require("../service/userService"));
-const multer_1 = __importDefault(require("multer"));
 const upload = (0, multer_1.default)({ storage: multer_1.default.diskStorage({}) });
 const Router = express_1.default.Router();
 Router.post('/user', upload.single('file'), async (req, res) => {
@@ -50,6 +50,8 @@ Router.get('/user', async (req, res) => {
             message: error.message,
         });
     }
+});
+Router.post('/upload', upload.array('file'), async (_req, _res) => {
 });
 exports.default = Router;
 //# sourceMappingURL=userRouter.js.map

@@ -1,6 +1,7 @@
 import { UploadApiResponse, v2 } from 'cloudinary';
 import { unlink } from 'fs';
 import { InternalServerError } from '../lib/Errors';
+import { MulterFile, MulterFiles } from '../types/multerType';
 
 const cloudinary = v2;
 
@@ -10,12 +11,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadCloudinary = async (file: any, publicId: string | number): Promise<UploadApiResponse> => {
-  const upload = await cloudinary.uploader.upload(file.path, {
+interface UploadResponse {
+  public_id: string;
+  url: string;
+}
+
+export const singleUpload = async (file: MulterFile, publicId: string | number): Promise<UploadResponse> => {
+  const upload: UploadApiResponse = await cloudinary.uploader.upload(file.path, {
     overwrite: true,
     public_id: `user_${publicId}`,
   });
-  console.log(upload);
 
   unlink(file.path, (err) => {
     if (err) {
@@ -23,7 +28,30 @@ export const uploadCloudinary = async (file: any, publicId: string | number): Pr
     }
   });
 
-  return upload;
+  return {
+    url: upload.secure_url,
+    public_id: upload.public_id,
+  };
+};
+
+export const multipleUpload = async (files: MulterFiles): Promise<UploadResponse[]> => {
+  const uploads = await Promise.all(
+    files.map(async (file) => {
+      const upload: UploadApiResponse = await cloudinary.uploader.upload(file.path);
+
+      unlink(file.path, (err) => {
+        if (err) {
+          throw new InternalServerError(err.message);
+        }
+      });
+      return {
+        url: upload.secure_url,
+        public_id: upload.public_id,
+      };
+    })
+  );
+
+  return uploads;
 };
 
 export default cloudinary;

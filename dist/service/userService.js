@@ -18,7 +18,7 @@ class UserService {
         if (!existingUser) {
             throw new Errors_1.NotFoundError('User dose not exist on the system');
         }
-        const upload = file && (await (0, cloudinary_1.uploadCloudinary)(file, userId));
+        const upload = file && (await (0, cloudinary_1.singleUpload)(file, userId));
         const data = upload
             ? Object.assign(Object.assign({}, body), { avatar: upload.secure_url, public_id: upload.public_id }) : body;
         const existingUserInfo = existingUser.userInfo;
