@@ -8,7 +8,7 @@ import {
   RelationsOption,
   SelectOption,
   WhereOption,
-} from '../types/repositoryFindOptions';
+} from '../types/RepositoryFindOptions';
 import { RegisterInput } from '../types/InputType';
 
 class UserRepository {

@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import multer from 'multer';
 import userRepository from '../repository/userRepository';
 import userService from '../service/userService';
-import { MulterFile } from '../types/multerType';
+import { MulterFile } from '../types/MulterType';
 
 const upload = multer({ storage: multer.diskStorage({}) });
 

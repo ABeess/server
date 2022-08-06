@@ -41,7 +41,7 @@ class UserService {
     const existingUserInfo = existingUser.userInfo;
 
     if (existingUserInfo) {
-      const newUserInfo = await UserInfoRepository.update(existingUserInfo.id, data);
+      const newUserInfo = await UserInfoRepository.updateById(existingUserInfo.id, data);
       // console.log(newUserInfo);
       return newUserInfo.raw[0];
     }

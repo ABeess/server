@@ -20,9 +20,9 @@ const passport_1 = __importDefault(require("../lib/passport"));
 const jwt_1 = __importDefault(require("../utils/jwt"));
 const Router = express_1.default.Router();
 Router.get('/auth/google', passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
-Router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/login', successRedirect: 'http://localhost:3090/auth/login' }));
+Router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/login', successRedirect: process.env.REDIRECT_FRONTEND_URL }));
 Router.get('/auth/github', passport_1.default.authenticate('github', { scope: ['profile', 'user:email'] }));
-Router.get('/github/callback', passport_1.default.authenticate('github', { failureRedirect: '/login', successRedirect: 'http://localhost:3090/auth/login' }));
+Router.get('/github/callback', passport_1.default.authenticate('github', { failureRedirect: '/login', successRedirect: process.env.REDIRECT_FRONTEND_URL }));
 Router.get('/oauth-user', (req, res) => {
     try {
         const response = req.user;

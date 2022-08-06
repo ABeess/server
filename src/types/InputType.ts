@@ -4,6 +4,7 @@ import UserInfo from '../entities/UserInfo';
 export interface RegisterInput {
   email: string;
   password: string;
+  code?: number;
   googleId?: string;
   githubId?: string;
   provider?: string;

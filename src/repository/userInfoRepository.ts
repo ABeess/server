@@ -2,7 +2,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import UserInfo from '../entities/UserInfo';
 import AppDataSource from '../lib/DataSource';
 import { UserInfoInput } from '../types/InputType';
-import { OderOption, RelationsOption, SelectOption, WhereOption } from '../types/repositoryFindOptions';
+import { OderOption, RelationsOption, SelectOption, WhereOption } from '../types/RepositoryFindOptions';
 
 class UserInfoRepository {
   constructor(private repository: Repository<UserInfo>) {}
@@ -20,7 +20,7 @@ class UserInfoRepository {
   }
 
   async findOne(
-    where?: WhereOption<UserInfo> | any,
+    where?: WhereOption<UserInfo>,
     options?: {
       relations?: RelationsOption<UserInfo>;
       select?: SelectOption<UserInfo>;
@@ -46,7 +46,7 @@ class UserInfoRepository {
     });
   }
 
-  async update(id: number, user: UserInfoInput): Promise<UpdateResult> {
+  async updateById(id: number, user: UserInfoInput): Promise<UpdateResult> {
     return await this.repository
       .createQueryBuilder()
       .update()

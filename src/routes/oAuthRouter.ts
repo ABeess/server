@@ -1,7 +1,7 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import passport from '../lib/passport';
-import { IOAuthResponse } from '../types/responseType';
+import { IOAuthResponse } from '../types/ResponseType';
 import JWTManager from '../utils/jwt';
 
 const Router = express.Router();
@@ -10,14 +10,14 @@ Router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 
 
 Router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login', successRedirect: 'http://localhost:3090/auth/login' })
+  passport.authenticate('google', { failureRedirect: '/login', successRedirect: process.env.REDIRECT_FRONTEND_URL })
 );
 
 Router.get('/auth/github', passport.authenticate('github', { scope: ['profile', 'user:email'] }));
 
 Router.get(
   '/github/callback',
-  passport.authenticate('github', { failureRedirect: '/login', successRedirect: 'http://localhost:3090/auth/login' })
+  passport.authenticate('github', { failureRedirect: '/login', successRedirect: process.env.REDIRECT_FRONTEND_URL })
 );
 
 Router.get('/oauth-user', (req, res) => {

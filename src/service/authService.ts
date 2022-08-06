@@ -4,7 +4,9 @@ import { User } from '../entities/User';
 import { ConflictError, UnauthorizedError } from '../lib/Errors';
 import UserRepository from '../repository/userRepository';
 import { LoginInput, RegisterInput } from '../types/InputType';
+import { ValidatorResponse } from '../types/ValidatorResponse';
 import JWTManager from '../utils/jwt';
+import redis from '../utils/redis';
 import { ValidateLogin } from '../utils/validator';
 
 type ReturnToken = {
@@ -14,7 +16,7 @@ type ReturnToken = {
 
 class AuthService {
   async register(registerInput: RegisterInput): Promise<User | null> {
-    const { email, password } = registerInput;
+    const { email, password, code } = registerInput;
     const validate: any = new ValidateLogin(email, password);
 
     if (validate && validate.error) {
@@ -27,6 +29,16 @@ class AuthService {
       throw new ConflictError('Email already exists');
     }
 
+    const result = (await redis.get(`email:${email}`)) as string;
+
+    if (!code) {
+      throw new UnauthorizedError('Code is required');
+    }
+
+    if (parseInt(result) !== code) {
+      throw new UnauthorizedError('Invalid code');
+    }
+
     const hashedPassword = await argon2.hash(password);
 
     const newUser = UserRepository.create({ email, password: hashedPassword });
@@ -36,11 +48,11 @@ class AuthService {
   // ----------------------------------------------------------------------------------
   async login(loginInput: LoginInput): Promise<User | null> {
     const { email, password } = loginInput;
-    // const validate: any = new ValidateLogin(email, password)
+    const validate = new ValidateLogin(email, password) as ValidatorResponse;
 
-    // if (validate && validate.error) {
-    //   throw new UnauthorizedError(validate.error.message)
-    // }
+    if (validate && validate.error) {
+      throw new UnauthorizedError(validate.error.message);
+    }
 
     const existingUser = await UserRepository.findOne(
       { email },

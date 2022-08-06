@@ -23,7 +23,7 @@ class UserService {
             ? Object.assign(Object.assign({}, body), { avatar: upload.secure_url, public_id: upload.public_id }) : body;
         const existingUserInfo = existingUser.userInfo;
         if (existingUserInfo) {
-            const newUserInfo = await userInfoRepository_1.default.update(existingUserInfo.id, data);
+            const newUserInfo = await userInfoRepository_1.default.updateById(existingUserInfo.id, data);
             return newUserInfo.raw[0];
         }
         const newUserInfo = await userInfoRepository_1.default.insert(Object.assign(Object.assign({}, data), { user: existingUser }));

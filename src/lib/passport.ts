@@ -4,7 +4,7 @@ import { Strategy as GithubStrategy } from 'passport-github';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import userInfoRepository from '../repository/userInfoRepository';
 import userRepository from '../repository/userRepository';
-import { IOAuthResponse } from '../types/responseType';
+import { IOAuthResponse } from '../types/ResponseType';
 
 passport.use(
   new GoogleStrategy(

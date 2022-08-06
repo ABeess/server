@@ -1,7 +1,7 @@
 import { UploadApiResponse, v2 } from 'cloudinary';
 import { unlink } from 'fs';
 import { InternalServerError } from '../lib/Errors';
-import { MulterFile, MulterFiles } from '../types/multerType';
+import { MulterFile, MulterFiles } from '../types/MulterType';
 
 const cloudinary = v2;
 

@@ -24,7 +24,7 @@ class UserInfoRepository {
     async find(where, options) {
         return this.repository.find(Object.assign({ where }, options));
     }
-    async update(id, user) {
+    async updateById(id, user) {
         return await this.repository
             .createQueryBuilder()
             .update()

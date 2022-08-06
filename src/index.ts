@@ -43,7 +43,6 @@ const main = async () => {
   app.use(passport.initialize());
   app.use(passport.session());
   app.use('/api', baseRouter);
-  // app.use('/', OAuthRouter);
 
   const httpServer = http.createServer(app);
 
