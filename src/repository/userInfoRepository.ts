@@ -15,7 +15,7 @@ class UserInfoRepository {
     return this.repository.createQueryBuilder().insert().values(data).returning('*').execute();
   }
 
-  async findById(id: number): Promise<UserInfo | null> {
+  async findById(id: string): Promise<UserInfo | null> {
     return this.repository.findOne({ where: { id } });
   }
 
@@ -46,7 +46,7 @@ class UserInfoRepository {
     });
   }
 
-  async updateById(id: number, user: UserInfoInput): Promise<UpdateResult> {
+  async updateById(id: string, user: UserInfoInput): Promise<UpdateResult> {
     return await this.repository
       .createQueryBuilder()
       .update()

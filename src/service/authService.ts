@@ -29,15 +29,15 @@ class AuthService {
       throw new ConflictError('Email already exists');
     }
 
-    const result = (await redis.get(`email:${email}`)) as string;
+    // const result = (await redis.get(`email:${email}`)) as string;
 
-    if (!code) {
-      throw new UnauthorizedError('Code is required');
-    }
+    // if (!code) {
+    //   throw new UnauthorizedError('Code is required');
+    // }
 
-    if (parseInt(result) !== code) {
-      throw new UnauthorizedError('Invalid code');
-    }
+    // if (parseInt(result) !== code) {
+    //   throw new UnauthorizedError('Invalid code');
+    // }
 
     const hashedPassword = await argon2.hash(password);
 
@@ -70,6 +70,8 @@ class AuthService {
     if (!validPassword) {
       throw new UnauthorizedError('Email or password is incorrect');
     }
+
+    await redis.set(`token:${existingUser.id}`, 1);
     return existingUser;
   }
   // ----------------------------------------------------------------------------------
@@ -84,6 +86,12 @@ class AuthService {
     }
 
     const existingUser = await UserRepository.findOne({ id: payload.id });
+
+    const existToken = await redis.exists(`token:${payload.id}`);
+
+    if (existToken) {
+      await redis.incrby(`token:${payload.id}`, 1);
+    }
 
     if (!existingUser) {
       throw new UnauthorizedError('You are not authenticated');

@@ -13,7 +13,7 @@ Router.post('/user', upload.single('file'), async (req: Request, res: Response) 
   try {
     const body = req.body;
 
-    const userId = req.session.userId as number;
+    const userId = req.session.userId as string;
     const file = req.file as MulterFile;
 
     const userInfo = await userService.createAndUpdate({ body, userId, file });
@@ -35,7 +35,7 @@ Router.post('/user', upload.single('file'), async (req: Request, res: Response) 
 
 Router.get('/user', async (req: Request, res: Response) => {
   try {
-    const userId = req.session.userId as number;
+    const userId = req.session.userId as string;
     const user = await userRepository.findOne(
       { id: userId },
       {

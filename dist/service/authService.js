@@ -21,13 +21,6 @@ class AuthService {
         if (existingUser) {
             throw new Errors_1.ConflictError('Email already exists');
         }
-        const result = (await redis_1.default.get(`email:${email}`));
-        if (!code) {
-            throw new Errors_1.UnauthorizedError('Code is required');
-        }
-        if (parseInt(result) !== code) {
-            throw new Errors_1.UnauthorizedError('Invalid code');
-        }
         const hashedPassword = await argon2_1.default.hash(password);
         const newUser = userRepository_1.default.create({ email, password: hashedPassword });
         return newUser;
@@ -48,6 +41,7 @@ class AuthService {
         if (!validPassword) {
             throw new Errors_1.UnauthorizedError('Email or password is incorrect');
         }
+        await redis_1.default.set(`token:${existingUser.id}`, 1);
         return existingUser;
     }
     async refreshToken(token) {
@@ -59,6 +53,10 @@ class AuthService {
             throw new Errors_1.UnauthorizedError('Invalid token');
         }
         const existingUser = await userRepository_1.default.findOne({ id: payload.id });
+        const existToken = await redis_1.default.exists(`token:${payload.id}`);
+        if (existToken) {
+            await redis_1.default.incrby(`token:${payload.id}`, 1);
+        }
         if (!existingUser) {
             throw new Errors_1.UnauthorizedError('You are not authenticated');
         }

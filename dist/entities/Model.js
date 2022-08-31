@@ -13,8 +13,8 @@ const typeorm_1 = require("typeorm");
 class Model extends typeorm_1.BaseEntity {
 }
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('increment'),
-    __metadata("design:type", Number)
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    __metadata("design:type", String)
 ], Model.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),

@@ -8,7 +8,7 @@ import { singleUpload } from '../utils/cloudinary';
 
 interface ParameterType {
   body: UserInfoInput;
-  userId: number;
+  userId: string;
   file?: Express.Multer.File;
 }
 

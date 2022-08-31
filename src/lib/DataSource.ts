@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'
+import { DataSource } from 'typeorm';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
@@ -16,6 +16,6 @@ const AppDataSource = new DataSource({
       rejectUnauthorized: false,
     },
   },
-})
+});
 
-export default AppDataSource
+export default AppDataSource;
