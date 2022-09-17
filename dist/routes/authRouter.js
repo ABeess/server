@@ -16,8 +16,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_status_codes_1 = require("http-status-codes");
-const authService_1 = __importDefault(require("../service/authService"));
 const Errors_1 = require("../lib/Errors");
+const authService_1 = __importDefault(require("../service/authService"));
 const jwt_1 = __importDefault(require("../utils/jwt"));
 const Router = express_1.default.Router();
 Router.post('/register', async (req, res) => {

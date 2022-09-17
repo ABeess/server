@@ -1,6 +1,8 @@
 import express from 'express';
 import { google } from 'googleapis';
 import { StatusCodes } from 'http-status-codes';
+import { HandlingError } from '../lib/Errors';
+import authService from '../service/authService';
 import redis from '../utils/redis';
 import MyTransporter from '../utils/transporter';
 
@@ -9,10 +11,13 @@ const Router = express.Router();
 Router.post('/send-mail', async (req, res) => {
   const { email } = req.body;
   try {
+    await authService.mailerService(email);
+
     const oauth2Client = new google.auth.OAuth2({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     });
+
     oauth2Client.setCredentials({
       refresh_token: process.env.GOOGLE_API_REFRESHTOKEN,
     });
@@ -47,10 +52,7 @@ Router.post('/send-mail', async (req, res) => {
       message: 'Mail sent',
     });
   } catch (error) {
-    console.log(error);
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      code: StatusCodes.INTERNAL_SERVER_ERROR,
-    });
+    return new HandlingError(res, error);
   }
 });
 

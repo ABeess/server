@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const argon2_1 = __importDefault(require("argon2"));
 const http_status_codes_1 = require("http-status-codes");
 const passport_1 = __importDefault(require("passport"));
 const passport_github_1 = require("passport-github");
@@ -24,16 +25,17 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
             return done(null, existingUser);
         }
         else if (!existingUser) {
+            const hashedPassword = await argon2_1.default.hash(process.env.OAUTH_PASSWORD_DEFAULT);
             const userGoogle = await userRepository_1.default.create({
                 email,
-                password: process.env.OAUTH_PASSWORD_DEFAULT,
+                password: hashedPassword,
                 googleId: profile.id,
                 provider: 'google',
-            });
-            await userInfoRepository_1.default.create({
                 firstName: name === null || name === void 0 ? void 0 : name.familyName,
                 lastName: name === null || name === void 0 ? void 0 : name.givenName,
                 avatar: photos,
+            });
+            await userInfoRepository_1.default.create({
                 user: userGoogle,
             });
             return done(null, userGoogle);
@@ -44,7 +46,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
         });
     }
     catch (error) {
-        done(error);
+        done(null, error);
     }
 }));
 passport_1.default.use(new passport_github_1.Strategy({
@@ -68,15 +70,16 @@ passport_1.default.use(new passport_github_1.Strategy({
             return done(null, existingUser);
         }
         else if (!existingUser) {
+            const hashedPassword = await argon2_1.default.hash(process.env.OAUTH_PASSWORD_DEFAULT);
             const userGithub = await userRepository_1.default.create({
                 email,
-                password: process.env.OAUTH_PASSWORD_DEFAULT,
+                password: hashedPassword,
                 githubId: profile.id,
                 provider: 'github',
-            });
-            await userInfoRepository_1.default.create({
                 lastName: profile.displayName,
                 avatar: photos,
+            });
+            await userInfoRepository_1.default.create({
                 user: userGithub,
             });
             return done(null, userGithub);
@@ -99,9 +102,7 @@ passport_1.default.deserializeUser(async (data, done) => {
             return done(null, data);
         }
         else {
-            const user = await userRepository_1.default.findOne({ id: data.id }, {
-                relations: ['userInfo'],
-            });
+            const user = await userRepository_1.default.findOne({ id: data.id });
             done(null, user);
         }
     }

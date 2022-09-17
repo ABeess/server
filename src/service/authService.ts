@@ -24,24 +24,28 @@ class AuthService {
     }
 
     const existingUser = await UserRepository.findOne({ email });
+    console.log(existingUser);
 
     if (existingUser) {
-      throw new ConflictError('Email already exists');
+      throw new ConflictError('Email already exists on the system');
     }
 
-    // const result = (await redis.get(`email:${email}`)) as string;
+    // const verifyCode = (await redis.get(`email:${email}`)) as string;
+
+    // console.log(verifyCode);
+    // console.log(code);
 
     // if (!code) {
     //   throw new UnauthorizedError('Code is required');
     // }
 
-    // if (parseInt(result) !== code) {
+    // if (verifyCode !== code) {
     //   throw new UnauthorizedError('Invalid code');
     // }
 
     const hashedPassword = await argon2.hash(password);
 
-    const newUser = UserRepository.create({ email, password: hashedPassword });
+    const newUser = UserRepository.create({ ...registerInput, email, password: hashedPassword });
 
     return newUser;
   }
@@ -105,6 +109,16 @@ class AuthService {
       newAccessToken,
       newRefreshToken,
     };
+  }
+
+  async mailerService(email: string): Promise<void> {
+    const existingUser = await UserRepository.findOne({
+      email,
+    });
+
+    if (existingUser) {
+      throw new ConflictError('Email already exists on the system');
+    }
   }
 }
 

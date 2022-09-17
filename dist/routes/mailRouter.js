@@ -6,12 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const googleapis_1 = require("googleapis");
 const http_status_codes_1 = require("http-status-codes");
+const Errors_1 = require("../lib/Errors");
+const authService_1 = __importDefault(require("../service/authService"));
 const redis_1 = __importDefault(require("../utils/redis"));
 const transporter_1 = __importDefault(require("../utils/transporter"));
 const Router = express_1.default.Router();
 Router.post('/send-mail', async (req, res) => {
     const { email } = req.body;
     try {
+        await authService_1.default.mailerService(email);
         const oauth2Client = new googleapis_1.google.auth.OAuth2({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -45,10 +48,7 @@ Router.post('/send-mail', async (req, res) => {
         });
     }
     catch (error) {
-        console.log(error);
-        return res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({
-            code: http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR,
-        });
+        return new Errors_1.HandlingError(res, error);
     }
 });
 exports.default = Router;

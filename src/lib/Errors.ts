@@ -1,90 +1,115 @@
-import { StatusCodes } from 'http-status-codes'
+import { Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 export class MyError extends Error {
-  public static message = 'MyError'
-  public readonly code = StatusCodes.BAD_REQUEST
+  public static message = 'MyError';
+  public readonly code = StatusCodes.BAD_REQUEST;
   constructor(message: string, code: number) {
-    super(message)
-    this.code = code
+    super(message);
+    this.code = code;
   }
 }
 
 export class NotFoundError extends MyError {
-  public static message = 'NotFoundError'
-  public static readonly code = StatusCodes.NOT_FOUND
+  public static message = 'NotFoundError';
+  public static readonly code = StatusCodes.NOT_FOUND;
   constructor(message: string) {
-    super(message, NotFoundError.code)
+    super(message, NotFoundError.code);
   }
 }
 
 export class ConflictError extends MyError {
-  public static message = 'ConflictError'
-  public static readonly code = StatusCodes.CONFLICT
+  public static message = 'ConflictError';
+  public static readonly code = StatusCodes.CONFLICT;
   constructor(message: string) {
-    super(message, ConflictError.code)
+    super(message, ConflictError.code);
   }
 }
 
 export class UnauthorizedError extends MyError {
-  public static message = 'UnauthorizedError'
-  public static readonly code = StatusCodes.UNAUTHORIZED
+  public static message = 'UnauthorizedError';
+  public static readonly code = StatusCodes.UNAUTHORIZED;
   constructor(message: string) {
-    super(message, UnauthorizedError.code)
+    super(message, UnauthorizedError.code);
   }
 }
 
 export class ForbiddenError extends MyError {
-  public static message = 'ForbiddenError'
-  public static readonly code = StatusCodes.FORBIDDEN
+  public static message = 'ForbiddenError';
+  public static readonly code = StatusCodes.FORBIDDEN;
   constructor(message: string) {
-    super(message, ForbiddenError.code)
+    super(message, ForbiddenError.code);
   }
 }
 
 export class BadRequestError extends MyError {
-  public static message = 'BadRequestError'
-  public static readonly code = StatusCodes.BAD_REQUEST
+  public static message = 'BadRequestError';
+  public static readonly code = StatusCodes.BAD_REQUEST;
   constructor(message: string) {
-    super(message, BadRequestError.code)
+    super(message, BadRequestError.code);
+  }
+}
+
+export class NotAllowed extends MyError {
+  public static message = 'MethodNotAllowed';
+  public static readonly code = StatusCodes.METHOD_NOT_ALLOWED;
+  constructor(message: string) {
+    super(message, BadRequestError.code);
   }
 }
 
 export class InternalServerError extends MyError {
-  public static message = 'InternalServerError'
-  public static readonly code = StatusCodes.INTERNAL_SERVER_ERROR
+  public static message = 'InternalServerError';
+  public static readonly code = StatusCodes.INTERNAL_SERVER_ERROR;
   constructor(message: string) {
-    super(message, InternalServerError.code)
+    super(message, InternalServerError.code);
   }
 }
 
 export class LengthRequiredError extends MyError {
-  public static message = 'LengthRequiredError'
-  public static readonly code = StatusCodes.LENGTH_REQUIRED
+  public static message = 'LengthRequiredError';
+  public static readonly code = StatusCodes.LENGTH_REQUIRED;
   constructor(message: string) {
-    super(message, LengthRequiredError.code)
+    super(message, LengthRequiredError.code);
   }
 }
 
 export class NotAcceptableError extends MyError {
-  public static message = 'NotAcceptableError'
-  public static readonly code = StatusCodes.NOT_ACCEPTABLE
+  public static message = 'NotAcceptableError';
+  public static readonly code = StatusCodes.NOT_ACCEPTABLE;
   constructor(message: string) {
-    super(message, NotAcceptableError.code)
+    super(message, NotAcceptableError.code);
   }
 }
 
 export class RequestTimeOut extends MyError {
-  public static message = 'RequestTimeOut'
-  public static readonly code = StatusCodes.REQUEST_TIMEOUT
+  public static message = 'RequestTimeOut';
+  public static readonly code = StatusCodes.REQUEST_TIMEOUT;
   constructor(message: string) {
-    super(message, RequestTimeOut.code)
+    super(message, RequestTimeOut.code);
   }
 }
 
 export class ImATeapot extends MyError {
-  public static message = 'ImATeapot'
-  public static readonly code = StatusCodes.IM_A_TEAPOT
+  public static message = 'ImATeapot';
+  public static readonly code = StatusCodes.IM_A_TEAPOT;
   constructor(message: string) {
-    super(message, ImATeapot.code)
+    super(message, ImATeapot.code);
+  }
+}
+
+interface ErrorHandler extends Error {
+  code?: number;
+}
+export class HandlingError {
+  public readonly message: string;
+  public readonly code: number;
+  constructor(res: Response, error: ErrorHandler) {
+    this.code = error.code || StatusCodes.INTERNAL_SERVER_ERROR;
+    this.message = error.message;
+    res.status(this.code).json({
+      code: this.code,
+      message: this.message,
+    });
   }
 }

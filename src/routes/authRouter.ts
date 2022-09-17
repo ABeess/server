@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import AuthService from '../service/authService';
 import { UnauthorizedError } from '../lib/Errors';
+import AuthService from '../service/authService';
 import JWTManager from '../utils/jwt';
 
 const Router = express.Router();

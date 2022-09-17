@@ -9,8 +9,10 @@ const socketIo = (httpServer) => {
         },
     });
     io.on('connection', (socket) => {
-        socket.on('message', (msg) => {
-            io.emit('message', msg);
+        console.log(socket);
+        socket.on('message:1', (msg) => {
+            console.log(msg);
+            io.emit('message:1', msg);
         });
     });
 };

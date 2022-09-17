@@ -4,10 +4,13 @@ import UserInfo from '../entities/UserInfo';
 export interface RegisterInput {
   email: string;
   password: string;
-  code?: number;
+  firstName?: string;
+  lastName?: string;
   googleId?: string;
   githubId?: string;
   provider?: string;
+  avatar?: string;
+  code?: string;
 }
 
 export interface LoginInput {

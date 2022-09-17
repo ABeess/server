@@ -23,6 +23,14 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "firstName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "lastName", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: true, unique: true }),
     __metadata("design:type", String)
 ], User.prototype, "googleId", void 0);
@@ -38,6 +46,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "avatar", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => UserInfo_1.default, (userInfo) => userInfo.user, {
         cascade: true,

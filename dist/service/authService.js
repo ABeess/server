@@ -18,11 +18,12 @@ class AuthService {
             throw new Errors_1.UnauthorizedError(validate.error.message);
         }
         const existingUser = await userRepository_1.default.findOne({ email });
+        console.log(existingUser);
         if (existingUser) {
-            throw new Errors_1.ConflictError('Email already exists');
+            throw new Errors_1.ConflictError('Email already exists on the system');
         }
         const hashedPassword = await argon2_1.default.hash(password);
-        const newUser = userRepository_1.default.create({ email, password: hashedPassword });
+        const newUser = userRepository_1.default.create(Object.assign(Object.assign({}, registerInput), { email, password: hashedPassword }));
         return newUser;
     }
     async login(loginInput) {
@@ -66,6 +67,14 @@ class AuthService {
             newAccessToken,
             newRefreshToken,
         };
+    }
+    async mailerService(email) {
+        const existingUser = await userRepository_1.default.findOne({
+            email,
+        });
+        if (existingUser) {
+            throw new Errors_1.ConflictError('Email already exists on the system');
+        }
     }
 }
 exports.default = new AuthService();

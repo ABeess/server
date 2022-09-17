@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImATeapot = exports.RequestTimeOut = exports.NotAcceptableError = exports.LengthRequiredError = exports.InternalServerError = exports.BadRequestError = exports.ForbiddenError = exports.UnauthorizedError = exports.ConflictError = exports.NotFoundError = exports.MyError = void 0;
+exports.HandlingError = exports.ImATeapot = exports.RequestTimeOut = exports.NotAcceptableError = exports.LengthRequiredError = exports.InternalServerError = exports.NotAllowed = exports.BadRequestError = exports.ForbiddenError = exports.UnauthorizedError = exports.ConflictError = exports.NotFoundError = exports.MyError = void 0;
 const http_status_codes_1 = require("http-status-codes");
 class MyError extends Error {
     constructor(message, code) {
@@ -51,6 +51,14 @@ class BadRequestError extends MyError {
 exports.BadRequestError = BadRequestError;
 BadRequestError.message = 'BadRequestError';
 BadRequestError.code = http_status_codes_1.StatusCodes.BAD_REQUEST;
+class NotAllowed extends MyError {
+    constructor(message) {
+        super(message, BadRequestError.code);
+    }
+}
+exports.NotAllowed = NotAllowed;
+NotAllowed.message = 'MethodNotAllowed';
+NotAllowed.code = http_status_codes_1.StatusCodes.METHOD_NOT_ALLOWED;
 class InternalServerError extends MyError {
     constructor(message) {
         super(message, InternalServerError.code);
@@ -91,4 +99,15 @@ class ImATeapot extends MyError {
 exports.ImATeapot = ImATeapot;
 ImATeapot.message = 'ImATeapot';
 ImATeapot.code = http_status_codes_1.StatusCodes.IM_A_TEAPOT;
+class HandlingError {
+    constructor(res, error) {
+        this.code = error.code || http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR;
+        this.message = error.message;
+        res.status(this.code).json({
+            code: this.code,
+            message: this.message,
+        });
+    }
+}
+exports.HandlingError = HandlingError;
 //# sourceMappingURL=Errors.js.map

@@ -1,7 +1,9 @@
+import argon2 from 'argon2';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
 import { Strategy as GithubStrategy } from 'passport-github';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { User } from '../entities/User';
 import userInfoRepository from '../repository/userInfoRepository';
 import userRepository from '../repository/userRepository';
 import { IOAuthResponse } from '../types/ResponseType';
@@ -23,16 +25,17 @@ passport.use(
         if (existingUser && isProvider) {
           return done(null, existingUser);
         } else if (!existingUser) {
+          const hashedPassword = await argon2.hash(process.env.OAUTH_PASSWORD_DEFAULT as string);
           const userGoogle = await userRepository.create({
             email,
-            password: process.env.OAUTH_PASSWORD_DEFAULT as string,
+            password: hashedPassword,
             googleId: profile.id,
             provider: 'google',
+            firstName: name?.familyName as string,
+            lastName: name?.givenName as string,
+            avatar: photos as string,
           });
           await userInfoRepository.create({
-            firstName: name?.familyName,
-            lastName: name?.givenName,
-            avatar: photos,
             user: userGoogle,
           });
           return done(null, userGoogle);
@@ -42,7 +45,7 @@ passport.use(
           message: `User with email ${email} already exists`,
         });
       } catch (error) {
-        done(error);
+        done(null, error);
       }
     }
   )
@@ -71,15 +74,17 @@ passport.use(
         if (existingUser && isProvider) {
           return done(null, existingUser);
         } else if (!existingUser) {
-          const userGithub = await userRepository.create({
+          const hashedPassword = await argon2.hash(process.env.OAUTH_PASSWORD_DEFAULT as string);
+
+          const userGithub: User = await userRepository.create({
             email,
-            password: process.env.OAUTH_PASSWORD_DEFAULT as string,
+            password: hashedPassword,
             githubId: profile.id,
             provider: 'github',
-          });
-          await userInfoRepository.create({
             lastName: profile.displayName,
             avatar: photos,
+          });
+          await userInfoRepository.create({
             user: userGithub,
           });
           return done(null, userGithub);
@@ -103,12 +108,7 @@ passport.deserializeUser(async (data: IOAuthResponse, done) => {
     if (data.code) {
       return done(null, data);
     } else {
-      const user = await userRepository.findOne(
-        { id: data.id },
-        {
-          relations: ['userInfo'],
-        }
-      );
+      const user = await userRepository.findOne({ id: data.id });
       done(null, user);
     }
   } catch (error) {
