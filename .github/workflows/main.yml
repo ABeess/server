@@ -10,20 +10,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout/@v2
 
-
-    # - name: Start Deployment
-    #   uses: TapTap21/docker-remote-deployment-action@v1.0
-    #   with:
-    #     remote_docker_host: ${{secrets.GOOGLE_CLOUD_HOST}}
-    #     ssh_private_key:  ${{secrets.SSH_PRIVATE_KEY}}
-    #     ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
-    #     stack_file_name: docker-compose.yml
-    #     docker_login_password: Hoainhon181120@#
-    #     docker_login_user: abeesdevjs
-    #     docker_login_registry : ${{ steps.login-ecr.outputs.registry }}
-    #     args: -p myapp up -d
-
-     - uses: alex-ac/github-action-ssh-docker-compose@master
+    - uses: alex-ac/github-action-ssh-docker-compose@master
       name: Docker-Compose Remote Deployment
       with:
         ssh_host: ${{secrets.GOOGLE_CLOUD_HOST}}
