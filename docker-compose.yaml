@@ -55,8 +55,6 @@ services:
     working_dir: /server
     ports:
       - '3080:3080'
-    depends_on:
-      - postgres
     restart: 'always'
     networks:
       - postgres
