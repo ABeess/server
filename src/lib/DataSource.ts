@@ -10,6 +10,7 @@ const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: ['dist/entities/*.js'],
   synchronize: true,
+  ssl: false,
   // logging: true,
   // extra: {
   //   ssl: {
