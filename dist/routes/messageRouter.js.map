@@ -1,1 +1,0 @@
-{"version":3,"file":"messageRouter.js","sourceRoot":"","sources":["../../src/routes/messageRouter.ts"],"names":[],"mappings":";;;;;AAAA,sDAA8B;AAC9B,wFAAgE;AAChE,MAAM,MAAM,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAC;AAEhC,MAAM,CAAC,GAAG,CAAC,cAAc,EAAE,2BAAiB,CAAC,UAAU,CAAC,CAAC;AACzD,MAAM,CAAC,GAAG,CAAC,UAAU,EAAE,2BAAiB,CAAC,UAAU,CAAC,CAAC;AAErD,kBAAe,MAAM,CAAC"}
