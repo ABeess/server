@@ -10,7 +10,7 @@ const AppDataSource = new DataSource({
   url: `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@postgres:5432/${process.env.DB_NAME}?schema=public`,
   entities: ['dist/entities/*.js'],
   synchronize: false,
-  ssl: true,
+  // ssl: true,
   // logging: true,
   extra: {
     ssl: {
