@@ -20,7 +20,7 @@ passport.use(
         const email = (profile.emails && profile.emails[0] && profile.emails[0].value) as string;
         const name = profile.name;
         const photos = profile.photos && profile.photos[0] && profile.photos[0].value;
-        const existingUser = await userRepository.findOne({ email });
+        const existingUser = await userRepository.findOne({ where: { email } });
         const isProvider = existingUser && existingUser.provider === 'google';
         if (existingUser && isProvider) {
           return done(null, existingUser);
@@ -69,7 +69,7 @@ passport.use(
           });
         }
         const photos = profile.photos && profile.photos[0] && profile.photos[0].value;
-        const existingUser = await userRepository.findOne({ email });
+        const existingUser = await userRepository.findOne({ where: { email } });
         const isProvider = existingUser && existingUser.provider === 'github';
         if (existingUser && isProvider) {
           return done(null, existingUser);
@@ -108,7 +108,7 @@ passport.deserializeUser(async (data: IOAuthResponse, done) => {
     if (data.code) {
       return done(null, data);
     } else {
-      const user = await userRepository.findOne({ id: data.id });
+      const user = await userRepository.findOne({ where: { id: data.id } });
       done(null, user);
     }
   } catch (error) {

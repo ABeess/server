@@ -1,4 +1,5 @@
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
+import { Message } from './Meessage';
 import Model from './Model';
 import UserInfo from './UserInfo';
 
@@ -22,7 +23,7 @@ export class User extends Model {
   @Column({ nullable: true })
   provider: string;
 
-  @Column()
+  @Column({ select: false })
   password!: string;
 
   @Column({ nullable: true })
@@ -32,4 +33,7 @@ export class User extends Model {
     cascade: true,
   })
   userInfo?: UserInfo;
+
+  @OneToMany(() => Message, (message) => message.sender)
+  messages?: Message[];
 }

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
+const Meessage_1 = require("./Meessage");
 const Model_1 = __importDefault(require("./Model"));
 const UserInfo_1 = __importDefault(require("./UserInfo"));
 let User = class User extends Model_1.default {
@@ -43,7 +44,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "provider", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ select: false }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
@@ -56,6 +57,10 @@ __decorate([
     }),
     __metadata("design:type", UserInfo_1.default)
 ], User.prototype, "userInfo", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Meessage_1.Message, (message) => message.sender),
+    __metadata("design:type", Array)
+], User.prototype, "messages", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

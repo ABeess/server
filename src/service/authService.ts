@@ -16,14 +16,14 @@ type ReturnToken = {
 
 class AuthService {
   async register(registerInput: RegisterInput): Promise<User | null> {
-    const { email, password, code } = registerInput;
+    const { email, password } = registerInput;
     const validate: any = new ValidateLogin(email, password);
 
     if (validate && validate.error) {
       throw new UnauthorizedError(validate.error.message);
     }
 
-    const existingUser = await UserRepository.findOne({ email });
+    const existingUser = await UserRepository.findOne({ where: { email } });
     console.log(existingUser);
 
     if (existingUser) {
@@ -54,16 +54,18 @@ class AuthService {
     const { email, password } = loginInput;
     const validate = new ValidateLogin(email, password) as ValidatorResponse;
 
+    console.log(email, password);
+
     if (validate && validate.error) {
       throw new UnauthorizedError(validate.error.message);
     }
+    // const existingUser = await UserRepository.findOne({ where: { email } });
 
-    const existingUser = await UserRepository.findOne(
-      { email },
-      {
-        relations: ['userInfo'],
-      }
-    );
+    const existingUser = await UserRepository.createQueryBuilder()
+      .where('email = :email', { email })
+      .addSelect('password')
+      .getOne();
+    console.log(existingUser);
 
     if (!existingUser) {
       throw new UnauthorizedError('Email or password is incorrect');
@@ -75,7 +77,6 @@ class AuthService {
       throw new UnauthorizedError('Email or password is incorrect');
     }
 
-    await redis.set(`token:${existingUser.id}`, 1);
     return existingUser;
   }
   // ----------------------------------------------------------------------------------
@@ -89,12 +90,12 @@ class AuthService {
       throw new UnauthorizedError('Invalid token');
     }
 
-    const existingUser = await UserRepository.findOne({ id: payload.id });
+    const existingUser = await UserRepository.findOne({ where: { id: payload.sub } });
 
-    const existToken = await redis.exists(`token:${payload.id}`);
+    const existToken = await redis.exists(`token:${payload.sub}`);
 
     if (existToken) {
-      await redis.incrby(`token:${payload.id}`, 1);
+      await redis.incrby(`token:${payload.sub}`, 1);
     }
 
     if (!existingUser) {
@@ -112,9 +113,7 @@ class AuthService {
   }
 
   async mailerService(email: string): Promise<void> {
-    const existingUser = await UserRepository.findOne({
-      email,
-    });
+    const existingUser = await UserRepository.findOne({ where: { email } });
 
     if (existingUser) {
       throw new ConflictError('Email already exists on the system');

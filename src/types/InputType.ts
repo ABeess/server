@@ -1,3 +1,4 @@
+import { Message } from '../entities/Meessage';
 import { User } from '../entities/User';
 import UserInfo from '../entities/UserInfo';
 
@@ -21,3 +22,11 @@ export interface LoginInput {
 export interface UserInfoInput extends Partial<UserInfo> {
   user?: User;
 }
+
+export interface ChatRoomInput {
+  sender: string;
+  receive: string;
+  room: string;
+}
+
+export interface MessageInput extends Partial<Message> {}

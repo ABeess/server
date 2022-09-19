@@ -1,15 +1,9 @@
-import { Repository, UpdateResult } from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 import { User } from '../entities/User';
 import AppDataSource from '../lib/DataSource';
-import {
-  OderOption,
-  PartialEntity,
-  QueryOption,
-  RelationsOption,
-  SelectOption,
-  WhereOption,
-} from '../types/RepositoryFindOptions';
+import { Nullable } from '../types';
 import { RegisterInput } from '../types/InputType';
+import { PartialEntity, QueryOption } from '../types/RepositoryFindOptions';
 
 class UserRepository {
   constructor(private repository: Repository<User>) {}
@@ -18,34 +12,30 @@ class UserRepository {
     return this.repository.save(data);
   }
 
-  async findOne(
-    where: WhereOption<User>,
-    options?: {
-      relations?: RelationsOption<User>;
-      select?: SelectOption<User>;
-    }
-  ): Promise<User | null> {
+  async findOne({ where, ...other }: FindOneOptions<User>): Promise<Nullable<User>> {
     return await this.repository.findOne({
       where,
-      ...options,
+      ...other,
     });
   }
 
-  async find(
-    where?: WhereOption<User>,
-    options?: {
-      relations?: RelationsOption<User>;
-      select?: SelectOption<User>;
-      order?: OderOption<User>;
-    }
-  ): Promise<User[]> {
+  async findOneBy({ ...other }: FindOptionsWhere<User>) {
+    return await this.repository.findOneBy(other);
+  }
+
+  async find({ where, ...other }: FindManyOptions<User>): Promise<User[]> {
     return this.repository.find({
       where,
-      ...options,
+      ...other,
     });
   }
+
   async update(query: QueryOption<User>, partial: PartialEntity<User>): Promise<UpdateResult> {
     return this.repository.update(query, partial);
+  }
+
+  createQueryBuilder() {
+    return this.repository.createQueryBuilder();
   }
 }
 

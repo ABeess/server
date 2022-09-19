@@ -34,8 +34,11 @@ Router.post('/user', upload.single('file'), async (req, res) => {
 Router.get('/user', async (req, res) => {
     try {
         const userId = req.session.userId;
-        const user = await userRepository_1.default.findOne({ id: userId }, {
-            select: ['id', 'email'],
+        const user = await userRepository_1.default.findOne({
+            where: {
+                id: userId,
+            },
+            select: ['email', 'id'],
         });
         return res.status(http_status_codes_1.StatusCodes.OK).json({
             code: http_status_codes_1.StatusCodes.OK,

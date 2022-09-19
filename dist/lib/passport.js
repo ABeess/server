@@ -19,7 +19,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
         const email = (profile.emails && profile.emails[0] && profile.emails[0].value);
         const name = profile.name;
         const photos = profile.photos && profile.photos[0] && profile.photos[0].value;
-        const existingUser = await userRepository_1.default.findOne({ email });
+        const existingUser = await userRepository_1.default.findOne({ where: { email } });
         const isProvider = existingUser && existingUser.provider === 'google';
         if (existingUser && isProvider) {
             return done(null, existingUser);
@@ -64,7 +64,7 @@ passport_1.default.use(new passport_github_1.Strategy({
             });
         }
         const photos = profile.photos && profile.photos[0] && profile.photos[0].value;
-        const existingUser = await userRepository_1.default.findOne({ email });
+        const existingUser = await userRepository_1.default.findOne({ where: { email } });
         const isProvider = existingUser && existingUser.provider === 'github';
         if (existingUser && isProvider) {
             return done(null, existingUser);
@@ -102,7 +102,7 @@ passport_1.default.deserializeUser(async (data, done) => {
             return done(null, data);
         }
         else {
-            const user = await userRepository_1.default.findOne({ id: data.id });
+            const user = await userRepository_1.default.findOne({ where: { id: data.id } });
             done(null, user);
         }
     }

@@ -12,7 +12,8 @@ class UserService {
         if (!userId) {
             throw new Errors_1.BadRequestError('Missing the parameter');
         }
-        const existingUser = await userRepository_1.default.findOne({ id: userId }, {
+        const existingUser = await userRepository_1.default.findOne({
+            where: { id: userId },
             relations: ['userInfo'],
         });
         if (!existingUser) {

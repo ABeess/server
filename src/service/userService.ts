@@ -18,12 +18,10 @@ class UserService {
       throw new BadRequestError('Missing the parameter');
     }
 
-    const existingUser = await userRepository.findOne(
-      { id: userId },
-      {
-        relations: ['userInfo'],
-      }
-    );
+    const existingUser = await userRepository.findOne({
+      where: { id: userId },
+      relations: ['userInfo'],
+    });
 
     if (!existingUser) {
       throw new NotFoundError('User dose not exist on the system');

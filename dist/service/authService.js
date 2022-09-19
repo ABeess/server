@@ -12,12 +12,12 @@ const redis_1 = __importDefault(require("../utils/redis"));
 const validator_1 = require("../utils/validator");
 class AuthService {
     async register(registerInput) {
-        const { email, password, code } = registerInput;
+        const { email, password } = registerInput;
         const validate = new validator_1.ValidateLogin(email, password);
         if (validate && validate.error) {
             throw new Errors_1.UnauthorizedError(validate.error.message);
         }
-        const existingUser = await userRepository_1.default.findOne({ email });
+        const existingUser = await userRepository_1.default.findOne({ where: { email } });
         console.log(existingUser);
         if (existingUser) {
             throw new Errors_1.ConflictError('Email already exists on the system');
@@ -29,12 +29,15 @@ class AuthService {
     async login(loginInput) {
         const { email, password } = loginInput;
         const validate = new validator_1.ValidateLogin(email, password);
+        console.log(email, password);
         if (validate && validate.error) {
             throw new Errors_1.UnauthorizedError(validate.error.message);
         }
-        const existingUser = await userRepository_1.default.findOne({ email }, {
-            relations: ['userInfo'],
-        });
+        const existingUser = await userRepository_1.default.createQueryBuilder()
+            .where('email = :email', { email })
+            .addSelect('password')
+            .getOne();
+        console.log(existingUser);
         if (!existingUser) {
             throw new Errors_1.UnauthorizedError('Email or password is incorrect');
         }
@@ -42,7 +45,6 @@ class AuthService {
         if (!validPassword) {
             throw new Errors_1.UnauthorizedError('Email or password is incorrect');
         }
-        await redis_1.default.set(`token:${existingUser.id}`, 1);
         return existingUser;
     }
     async refreshToken(token) {
@@ -53,10 +55,10 @@ class AuthService {
         if (!payload) {
             throw new Errors_1.UnauthorizedError('Invalid token');
         }
-        const existingUser = await userRepository_1.default.findOne({ id: payload.id });
-        const existToken = await redis_1.default.exists(`token:${payload.id}`);
+        const existingUser = await userRepository_1.default.findOne({ where: { id: payload.sub } });
+        const existToken = await redis_1.default.exists(`token:${payload.sub}`);
         if (existToken) {
-            await redis_1.default.incrby(`token:${payload.id}`, 1);
+            await redis_1.default.incrby(`token:${payload.sub}`, 1);
         }
         if (!existingUser) {
             throw new Errors_1.UnauthorizedError('You are not authenticated');
@@ -69,9 +71,7 @@ class AuthService {
         };
     }
     async mailerService(email) {
-        const existingUser = await userRepository_1.default.findOne({
-            email,
-        });
+        const existingUser = await userRepository_1.default.findOne({ where: { email } });
         if (existingUser) {
             throw new Errors_1.ConflictError('Email already exists on the system');
         }
