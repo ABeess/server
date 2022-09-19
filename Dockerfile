@@ -8,13 +8,8 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn build
-
-RUN yarn start
-
 ENV NODE_ENV production
 
-
-EXPOSE 3030
+EXPOSE 3080
 
 CMD ["yarn", "start"]
