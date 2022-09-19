@@ -13,7 +13,7 @@ services:
     networks:
       - postgres
   postgres:
-    container_name: postgres
+    container_name: postgres_container
     image: postgres
     environment:
       POSTGRES_USER: postgres
@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin
+    container_name: pgadmin_container
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: abeesdevjs@gmail.com
