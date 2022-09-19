@@ -13,7 +13,7 @@ const AppDataSource = new DataSource({
   // logging: true,
   extra: {
     ssl: {
-      rejectUnauthorized: false,
+      rejectUnauthorized: true,
     },
   },
 });
