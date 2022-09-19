@@ -1,20 +1,20 @@
 version: '3.3'
 services:
 
-  # postgres:
-  #   container_name: postgres_container
-  #   image: postgres
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: abees
-  #     PGDATA: /data/postgres
-  #   volumes:
-  #      - postgres:/data/postgres
-  #   ports:
-  #     - "5432:5432"
-  #   networks:
-  #     - postgres
-  #   restart: unless-stopped
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: abees
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
   server:
     image: node:16-alpine
     container_name: server
