@@ -13,7 +13,7 @@ jobs:
           host: ${{secrets.GOOGLE_CLOUD_HOST}}
           username: ${{secrets.SSH_USER_NAME}}
           script: |
-            cd ~/server
+            cd /home/abees/server
             git checkout production
             git pull
             sudo docker-compose rm -s -v -f server
