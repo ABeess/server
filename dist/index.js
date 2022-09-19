@@ -39,6 +39,9 @@ const main = async () => {
     }));
     app.use(passport_1.default.initialize());
     app.use(passport_1.default.session());
+    app.use('/', async (_req, res) => {
+        res.send('Hello');
+    });
     app.use('/api', baseApi_1.default);
     const httpServer = http_1.default.createServer(app);
     (0, socket_1.default)(httpServer);

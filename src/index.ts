@@ -43,14 +43,9 @@ const main = async () => {
 
   app.use(passport.initialize());
   app.use(passport.session());
-  // app.use('/', async (req, res) => {
-  //   await redis.set('testKey', 1);
-  //   await redis.incrby('testKey', 5);
-
-  //   // console.log('exists', await redis.exists('testKey1'));
-
-  //   res.send('asdasda');
-  // });
+  app.use('/', async (_req, res) => {
+    res.send('Hello');
+  });
   app.use('/api', baseRouter);
 
   const httpServer = http.createServer(app);
