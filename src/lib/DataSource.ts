@@ -11,11 +11,11 @@ const AppDataSource = new DataSource({
   entities: ['dist/entities/*.js'],
   synchronize: true,
   // logging: true,
-  extra: {
-    ssl: {
-      rejectUnauthorized: true,
-    },
-  },
+  // extra: {
+  //   ssl: {
+  //     rejectUnauthorized: true,
+  //   },
+  // },
 });
 
 export default AppDataSource;
