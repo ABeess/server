@@ -12,53 +12,53 @@ services:
     restart: 'always'
     networks:
       - postgres
-  # postgres:
-  #   container_name: postgres_container
-  #   image: postgres
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: abees
-  #     PGDATA: /data/postgres
-  #   volumes:
-  #      - postgres:/data/postgres
-  #   ports:
-  #     - "5432:5432"
-  #   networks:
-  #     - postgres
-  #   restart: unless-stopped
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: abees
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
 
-  # pgadmin:
-  #   container_name: pgadmin_container
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: abeesdevjs@gmail.com
-  #     PGADMIN_DEFAULT_PASSWORD: abees
-  #     PGADMIN_CONFIG_SERVER_MODE: 'False'
-  #   volumes:
-  #      - pgadmin:/var/lib/pgadmin
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: abeesdevjs@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: abees
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
 
-  #   ports:
-  #     - "${PGADMIN_PORT:-5050}:80"
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
 
-  #   logging:
-  #     driver: "none"
+    logging:
+      driver: "none"
 
-  #   networks:
-  #     - postgres
-  #   restart: unless-stopped
-  # redis:
-  #   image: 'redis:5.0.8-alpine'
-  #   container_name: 'redis'
-  #   ports:
-  #     - 6379:6379
-  #   healthcheck:
-  #     test: ['CMD-SHELL', "sh -c 'redis-cli PING'"]
-  #     interval: 30s
-  #     timeout: 30s
-  #     retries: 3
-  #   restart: 'on-failure'
-  #   networks:
-  #     - postgres
+    networks:
+      - postgres
+    restart: unless-stopped
+  redis:
+    image: 'redis:5.0.8-alpine'
+    container_name: 'redis'
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ['CMD-SHELL', "sh -c 'redis-cli PING'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: 'on-failure'
+    networks:
+      - postgres
 networks:
   postgres:
     driver: bridge
