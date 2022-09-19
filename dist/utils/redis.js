@@ -4,9 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ioredis_1 = __importDefault(require("ioredis"));
-const redis = new ioredis_1.default({
-    host: 'redis',
-    port: 6379,
-});
+const redis = new ioredis_1.default();
 exports.default = redis;
 //# sourceMappingURL=redis.js.map
