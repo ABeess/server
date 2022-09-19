@@ -12,11 +12,11 @@ const AppDataSource = new DataSource({
   synchronize: true,
   ssl: false,
   // logging: true,
-  // extra: {
-  //   ssl: {
-  //     rejectUnauthorized: true,
-  //   },
-  // },
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 export default AppDataSource;
