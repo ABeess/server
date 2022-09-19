@@ -13,10 +13,9 @@ jobs:
           host: ${{secrets.GOOGLE_CLOUD_HOST}}
           username: ${{secrets.SSH_USER_NAME}}
           script: |
-            cd ~
-            pwd
-            # git checkout production
-            # git pull
-            # sudo docker-compose rm -s -v -f server
-            # sudo docker-compose up -d
+            cd /home/abeesdevop/server
+            sudo git checkout production
+            sudo git pull
+            sudo docker-compose rm -s -v -f server
+            sudo docker-compose up -d
             
