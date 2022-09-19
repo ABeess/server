@@ -11,7 +11,41 @@ services:
       - '3080:3080'
     restart: 'always'
     networks:
-      - webproxy
+      - postgres
+  # postgres:
+  #   container_name: postgres_container
+  #   image: postgres
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: abees
+  #     PGDATA: /data/postgres
+  #   volumes:
+  #      - postgres:/data/postgres
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # pgadmin:
+  #   container_name: pgadmin_container
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: abeesdevjs@gmail.com
+  #     PGADMIN_DEFAULT_PASSWORD: abees
+  #     PGADMIN_CONFIG_SERVER_MODE: 'False'
+  #   volumes:
+  #      - pgadmin:/var/lib/pgadmin
+
+  #   ports:
+  #     - "${PGADMIN_PORT:-5050}:80"
+
+  #   logging:
+  #     driver: "none"
+
+  #   networks:
+  #     - postgres
+  #   restart: unless-stopped
   # redis:
   #   image: 'redis:5.0.8-alpine'
   #   container_name: 'redis'
@@ -24,7 +58,7 @@ services:
   #     retries: 3
   #   restart: 'on-failure'
   #   networks:
-  #     - webproxy
+  #     - postgres
 networks:
-  webproxy:
+  postgres:
     driver: bridge
