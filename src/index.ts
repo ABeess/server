@@ -44,9 +44,9 @@ const main = async () => {
 
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use('/', async (_req, res) => {
-    res.send('<h1>Test Cicd</h1>');
-  });
+  // app.use('/', async (_req, res) => {
+  //   res.send('<h1>Test Cicd</h1>');
+  // });
   app.use('/api', baseRouter);
 
   const httpServer = http.createServer(app);
