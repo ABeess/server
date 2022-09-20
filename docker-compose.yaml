@@ -49,9 +49,9 @@ services:
     logging:
       driver: "none"
 
+    restart: unless-stopped
     networks:
       - proxy
-    restart: unless-stopped
   redis:
     image: 'redis:5.0.8-alpine'
     container_name: 'redis'
@@ -69,5 +69,4 @@ networks:
   proxy:
     driver: bridge
 volumes:
-  postgres:
   pgadmin:
