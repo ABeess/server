@@ -24,7 +24,7 @@ services:
   server:
     image: node:16-alpine
     container_name: server
-    command: sh -c "yarn install  && yarn build && yarn start"
+    command: sh -c "yarn install yarn install --frozen-lockfile  && yarn build && yarn start"
     volumes:
       - ./:/server
     working_dir: /server
