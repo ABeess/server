@@ -11,7 +11,6 @@ import socketIo from './socket';
 import redis from './utils/redis';
 import passport from './lib/passport';
 import AppDataSource from './lib/DataSource';
-// import { createConnection } from 'typeorm';
 
 const main = async () => {
   const app = express();
@@ -19,23 +18,12 @@ const main = async () => {
   const RedisStore = connectRedis(session);
 
   await AppDataSource.connect();
-  // await createConnection({
-  //   type: 'postgres',
-  //   port: Number(process.env.DB_PORT),
-  //   username: process.env.DB_USER,
-  //   password: process.env.DB_PASSWORD,
-  //   database: process.env.DB_NAME,
-  //   url: process.env.DB_URL,
-  //   entities: ['dist/entities/*.js'],
-  //   synchronize: true,
-  //   logging: true,
-  // });
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(
     cors({
-      origin: 'http://localhost:3090',
+      origin: ['http://localhost:3090', process.env.FORNT_END_CORDS as string],
       credentials: true,
     })
   );

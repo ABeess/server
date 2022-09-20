@@ -9,7 +9,7 @@ import MessageRepository from './repository/messageRepository';
 const socketIo = (httpServer: httpServer) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: 'http://localhost:3090',
+      origin: ['http://localhost:3090', process.env.FORNT_END_CORDS as string],
       credentials: true,
     },
   });
